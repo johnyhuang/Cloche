@@ -47,7 +47,7 @@ session_start();
             <a class="nav-link" href="help.php">Help</a>
           </li>
           <li>
-            <a class="nav-link" href="login.php">Sign In</a>
+            <a class="nav-link" href="login.php">Sign In/Register</a>
           </li>
         </ul>
       </div>
@@ -157,7 +157,7 @@ session_start();
               <a href="#">Privacy Policy</a>
             </li>
           </ul>
-          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
         </div>
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">

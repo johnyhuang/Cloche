@@ -50,7 +50,7 @@
             if(isset($_SESSION['user_session'])){
               $username = $_SESSION['user_session'];
               echo "<li class='dropdown'>
-                      <a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#Profile'>$username</a>
+                      <a class='nav-link dropdown-toggle' data-toggle='dropdown'>$username</a>
                       <ul class='dropdown-menu'>
                         <li>
                           <a class='dropdown-item' href='#Profile'>Profile</a>
@@ -62,7 +62,7 @@
                     </li>";
             } else {
               echo "<li>
-                      <a class='nav-link' href='login.php'>Sign In</a>
+                      <a class='nav-link' href='login.php'>Sign In/Register</a>
                     </li>";
             }
           ?>
@@ -88,13 +88,13 @@
           </ol>
           <div class="carousel-inner" role="listbox">
             <div class="carousel-item active">
-              <img class="d-block img-fluid" src="http://placehold.it/1200x450" alt="First slide">
+              <img class="d-block img-fluid" src="img/carousel_1.jpg" alt="First slide" width="1200">
             </div>
             <div class="carousel-item">
-              <img class="d-block img-fluid" src="http://placehold.it/1200x450" alt="Second slide">
+              <img class="d-block img-fluid" src="img/carousel_2.jpg" alt="Second slide" width="1200">
             </div>
             <div class="carousel-item">
-              <img class="d-block img-fluid" src="http://placehold.it/1200x450" alt="Third slide">
+              <img class="d-block img-fluid" src="img/carousel_3.jpg" alt="Third slide" width="1200">
             </div>
           </div>
           <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -109,31 +109,42 @@
 
         <div class="row">
           <?php
-            foreach($_SESSION['recipes'] as $recipes){
-              $recipe_name = $recipes['recipe_name'];
-              $creator_name = $recipes['creator_name'];
-              $description = $recipes['description'];
-              $likes = $recipes['likes'];
-              $dislikes = $recipes['dislikes'];
-              echo  '<div class="col-lg-4 col-md-6 mb-4">
+            if(isset($_SESSION['recipes'])){
+              foreach($_SESSION['recipes'] as $recipes){
+                $recipe_id = $recipes['id'];
+                $recipe_name = $recipes['recipe_name'];
+                $creator_name = $recipes['creator_name'];
+                $description = $recipes['description'];
+                $likes = $recipes['likes'];
+                $dislikes = $recipes['dislikes'];
+                $picture = $recipes['recipe_picture'];
+                echo  '<div class="col-lg-4 col-md-6 mb-5">
+                        <div class="card h-100">
+                          <a href="#"><img class="card-img-top" src="'.$picture.'" alt=""></a>
+                          <div class="card-body">
+                            <h4 class="card-title">
+                              <a href="recipe_page.php?id='.$recipe_id.'">'.$recipe_name.'</a>
+                            </h4>
+                            <h6 class="card-text">
+                              <a href="profile_page.php?name='.$creator_name.'" >'.$creator_name.'</a>
+                            </h6>
+                            <p class="card-text">'.$description.'</p>
+                          </div>
+                          <div class="card-footer">
+                            <i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgreen"> '.$likes.'</i>
+                            <i class="fa fa-thumbs-down ml-2" aria-hidden="true" style="color:red"> '.$dislikes.'</i>
+                          </div>
+                        </div>
+                      </div>';
+              }
+            } else {
+              echo '<div class="col-lg-12 col-md-6 text-center mb-5>"
                       <div class="card h-100">
-                        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-                        <div class="card-body">
-                          <h4 class="card-title">
-                            <a href="#">'.$recipe_name.'</a>
-                          </h4>
-                          <h6 class="card-text">
-                            <a href="#" >'.$creator_name.'</a>
-                          </h6>
-                          <p class="card-text">'.$description.'</p>
-                        </div>
-                        <div class="card-footer">
-                          <i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgreen">'.$likes.'</i>
-                          <i class="fa fa-thumbs-down ml-2" aria-hidden="true" style="color:red">'.$dislikes.'</i>
-                        </div>
+                        <h3>No entry found</h3>
                       </div>
                     </div>';
             }
+            
           ?>
 
         </div>
@@ -170,7 +181,7 @@
               <a href="#">Privacy Policy</a>
             </li>
           </ul>
-          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
         </div>
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">

@@ -62,7 +62,7 @@
                         </li>";
                 } else {
                 echo "<li>
-                        <a class='nav-link' href='login.php'>Sign In</a>
+                        <a class='nav-link' href='login.php'>Sign In/Register</a>
                         </li>";
                 }
             ?>
@@ -78,7 +78,7 @@
                 <br>
                 <br>
                 <div class="card mt-4">
-                    <form id="add-recipe" name="add_recipe" method="post" action="add_recipe_response.php">
+                    <form id="add-recipe" name="add_recipe" method="post" action="add_recipe_response.php" enctype="multipart/form-data">
                     <img id="image" class="card-img-top img-fluid" src="http://placehold.it/1140x500" alt="" style="max-width:1140px;">
                     <input type="file" class="form-control-file btn-primary w-25" id="image_upload" name="image_upload" onchange="readURL(this);" accept="image/*">  
                     <div class="card-body">
@@ -127,7 +127,7 @@
               <a href="#">Privacy Policy</a>
             </li>
           </ul>
-          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
         </div>
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">

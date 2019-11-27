@@ -62,7 +62,7 @@
                     </li>";
             } else {
               echo "<li>
-                      <a class='nav-link' href='login.php'>Sign In</a>
+                      <a class='nav-link' href='login.php'>Sign In/Register</a>
                     </li>";
             }
           ?>
@@ -99,7 +99,7 @@
             if(isset($_SESSION['user_session'])){
               echo "<form action='add_recipe.php'>
                       <button type='submit' class='btn btn-lg btn-primary'>
-                        <i class='icon-plus m-auto text-tertiary' style='font-size: 25px;'> 
+                        <i class='icon-plus m-auto text-tertiary'> 
                         </i>
                         Add Recipe
                       </button>
@@ -135,7 +135,7 @@
               <a href="#">Privacy Policy</a>
             </li>
           </ul>
-          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
         </div>
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">

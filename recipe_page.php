@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,7 +62,7 @@
                     </li>";
             } else {
               echo "<li>
-                      <a class='nav-link' href='login.php'>Sign In</a>
+                      <a class='nav-link' href='login.php'>Sign In/Register</a>
                     </li>";
             }
           ?>
@@ -69,64 +72,74 @@
   </nav>
 
   <!-- Page Content -->
-  <div class="container mt-5">
-
-    <div class="row">
-
-      <div class="col-lg-12">
-
-        <div class="card mt-4">
-          <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt="">
-          <div class="card-body">
-            <h3 class="card-title">Recipe Name</h3>
-            <a class="card-text" href="#">Creator Name</a>
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente dicta fugit fugiat hic aliquam itaque facere, soluta. Totam id dolores, sint aperiam sequi pariatur praesentium animi perspiciatis molestias iure, ducimus!</p>
-            <i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgreen">0</i>
-            <i class="fa fa-thumbs-down ml-2" aria-hidden="true" style="color:red">0</i>
-          </div>
-        </div>
-        <!-- /.card -->
-
-        <div class="card card-outline-secondary my-4">
-          <div class="card-header">
-            Ingredients
-          </div>
-          <div class="card-body">
-            <ul>
-              <li>3 medium size Sweet Potatoes (chopped)</li>
-              <li>2 large Carrots (chopped)</li>
-              <li>1 Leek (chopped)</li>
-              <li>1 tablespoon Pepper flakes (Optional)</li>
-              <li>Salt</li>
-              <li>Pepper</li>
-              <li>Olive Oil (topping)</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- /.card -->
-
-        <div class="card card-outline-secondary my-4">
-          <div class="card-header">
-            Steps
-          </div>
-          <div class="card-body">
-            <ol type="1">
-                <li>Wash all ingredients before adding into the pot.</li>
-                <li>Add all the ingredients into a pot filled with water along with salt, pepper and pepper flakes.</li>
-                <li>Boil for about 1/2 hour, on medium to high heat and boil until veggies are soft. Once boiled place a hand food blender and process until smooth and thick.</li>
-              </ol>
-          </div>
-        </div>
-        <!-- /.card -->
-
-      </div>
-      <!-- /.col-lg-12 -->
-
-    </div>
-
-  </div>
-  <!-- /.container -->
+  <?php
+    include_once("./connect/db_cls_connect.php");
+    $db = new dbObj();
+    $connString =  $db->getConnstring();
+    if(isset($_GET['id'])){
+      $id = $_GET['id'];
+      $query = "SELECT recipe_name, creator_name, description, ingredients, steps, recipe_picture, likes, dislikes, recipe_picture FROM recipes WHERE id='$id'";
+      $result = mysqli_query($connString, $query) or die("database error:". mysqli_error($connString));
+      $row = mysqli_fetch_assoc($result);
+      $recipe_name = $row['recipe_name'];
+      $creator_name = $row['creator_name'];
+      $description = $row['description'];
+      $recipe_picture = $row['recipe_picture'];
+      $ingredients = $row['ingredients'];
+      $steps = $row['steps'];
+      $likes = $row['likes'];
+      $dislikes = $row['dislikes'];
+      $picture = $row['recipe_picture'];
+      $url_like = "rate_recipe_response.php?id=" .$id. "&type=like";
+      $url_dislike = "rate_recipe_response.php?id=" .$id. "&type=dislike";
+      echo '<div class="container mt-5">
+              <div class="row">
+          
+                <div class="col-lg-12">
+          
+                  <div class="card mt-4">
+                    <img class="card-img-top img-fluid" src="'.$picture.'" alt="">
+                    <div class="card-body">
+                      <h3 class="card-title">'.$recipe_name.'</h3>
+                      <a class="card-text" href="profile_page.php?name='.$creator_name.'">'.$creator_name.'</a>
+                      <p class="card-text">'.$description.'</p>
+                      <a href="'.$url_like.'"><i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgreen"> '.$likes.'</i></a>
+                      <a href="'.$url_dislike.'"><i class="fa fa-thumbs-down ml-2" aria-hidden="true" style="color:red"> '.$dislikes.'</i></a>
+                    </div>
+                  </div>
+                  <!-- /.card -->
+          
+                  <div class="card card-outline-secondary my-4">
+                    <div class="card-header">
+                      Ingredients
+                    </div>
+                    <div class="card-body">
+                      <textarea type="text" class="form-control" id="ingredients" name="ingredients" placeholder="Ingredients..." rows="10" readonly>'.$ingredients.'</textarea>
+                    </div>
+                  </div>
+          
+                  <!-- /.card -->
+          
+                  <div class="card card-outline-secondary my-4">
+                    <div class="card-header">
+                      Steps
+                    </div>
+                    <div class="card-body">
+                      <textarea type="text" class="form-control" id="steps" name="steps" placeholder="Steps..." rows="10" readonly>'.$steps.'</textarea>
+                    </div>
+                  </div>
+                  <!-- /.card -->
+          
+                </div>
+                <!-- /.col-lg-12 -->
+          
+              </div>
+          
+            </div>
+          <!-- /.container -->';
+    }
+  ?>
+  
 
   <!-- Footer -->
   <footer class="footer bg-dark">
@@ -150,7 +163,7 @@
               <a href="#">Privacy Policy</a>
             </li>
           </ul>
-          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
         </div>
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">
