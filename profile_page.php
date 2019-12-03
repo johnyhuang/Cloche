@@ -1,3 +1,26 @@
+<?php
+//Start session and make database connection
+include_once("./connect/db_cls_connect.php");
+$db = new dbObj();
+$connString =  $db->getConnstring();
+$username = $_SESSION['user_session'];
+
+//Get profile name from url
+$profile_name = $_GET['profile_name'];
+
+//Query to get profile information from database using profile name
+$qry = "SELECT username, email, description, profile_picture FROM users WHERE username = '$profile_name'";
+$rslt_qry = mysqli_query($connString, $qry) or die("database error:". mysqli_error($connString));
+$row = mysqli_fetch_assoc($rslt_qry);
+
+//Assign profile information
+$name_profile = $row['username'];
+$email_profile = $row['email'];
+$description_profile = $row['description'];
+$image_profile = $row['profile_picture'];
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +31,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Landing Page - Start Bootstrap Theme</title>
+  <title>Profile Page Cloche</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -28,96 +51,234 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <i class="icon-fire mr-3 text-primary"></i>
-      <a class="navbar-brand" href="#">Cloché</a>
+      <a class="navbar-brand" href="index.php">Cloché</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home
+            <a class="nav-link" href="index.php">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Help</a>
+            <a class="nav-link" href="help.php">Help</a>
           </li>
-          <li>
-            <a class="nav-link" href="#">Sign In</a>
-          </li>
+          <?php
+            //Check if user is logged in, if yes then display user profile button
+            if(isset($_SESSION['user_session'])){
+              $username = $_SESSION['user_session'];
+              echo "<li class='dropdown'>
+                      <a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#'>$username</a>
+                      <ul class='dropdown-menu'>
+                        <li>
+                          <a class='dropdown-item' href='profile_page.php?profile_name=$username'>Profile</a>
+                        </li>
+                        <li>
+                          <a class='dropdown-item' href='logout_response.php'>Logout</a>
+                        </li>
+                      </ul>
+                    </li>";
+            } 
+            //If not logged in then display button to sign in/register
+            else {
+              echo "<li>
+                      <a class='nav-link' href='login.php'>Sign In/Register</a>
+                    </li>";
+            }
+          ?>
         </ul>
       </div>
     </div>
   </nav>
 
-  <div class="container">
+	<div class="mt-5">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-12 mt-5 text-center">
+					
+          <?php 
+            //4B
+            //Check if profile has a profile picture, if yes display it
+            if (isset($image_profile)){
+						echo '<img class="rounded-circle" src='.$image_profile.' alt="">';
+            } 
+            //If profile has no profile picture set then display placeholder profile picture
+            else{
+						echo "<img class='rounded-circle' src='img/profile_picture_placeholder.png'>";
+            }
+
+            //Display profile name, email and description
+            echo "<h1>$name_profile</h1>"; 
+            echo "<h3>$email_profile</h3>"; 
+            echo "<card readonly>$description_profile</card>";
+            
+            //Query to get and show how many recipes the selected user has made
+					  $sql = "SELECT COUNT(id) as tot_recipe FROM recipes WHERE creator_name = '$name_profile'";
+            $res_sql = mysqli_query($connString, $sql) or die("database error:". mysqli_error($connString));
+            $data_tot_recipe = mysqli_fetch_assoc($res_sql);
+            echo "<h4 style='color:#f5c242'>".$data_tot_recipe['tot_recipe']." recipes</h4>";
+             ?>
+            
+				</div>
+		
+			</div>
+			<?php
+      //Display option to edit recipe if the user is accessing his/her own profile
+			if($name_profile==$username){
+				echo '<div class="row">
+					<div class="col-5">
+					</div>
+					<div class="col-lg-2 col-md-2 text-center">
+						<a href="edit_profile.php"><button class="btn btn-block btn-lg btn-primary">EDIT PROFILE</button></a>
+					</div>
+					<div class="col-5">
+					</div>
+				</div>
+				';
+			} 
+
+        
+        
+     ?>
+			
         <div class="row">
-            <div class="col-md-6 mt-5 mx-auto text-center">
-                <div class="profile">
-                    <div class="avatar">
-                        <img src="https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTU0NjQzOTk4OTQ4OTkyMzQy/ansel-elgort-poses-for-a-portrait-during-the-baby-driver-premiere-2017-sxsw-conference-and-festivals-on-march-11-2017-in-austin-texas-photo-by-matt-winkelmeyer_getty-imagesfor-sxsw-square.jpg" alt="Circle Image" class="img-raised rounded-circle img-fluid">
-                    </div>
-                    <div class="name">
-                        <h3 class="title">Christian Louboutin</h3>
-                        <h6>Designer</h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="description text-center">
-            <p>An artist of considerable range, Chet Faker — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure. </p>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 text-center">
-                <img src="https://images.unsplash.com/photo-1524498250077-390f9e378fc0?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=83079913579babb9d2c94a5941b2e69d&auto=format&fit=crop&w=751&q=80" class="rounded-0" style="width: 100%; height:10 vw; object-fit: cover">
-                <img src="https://images.unsplash.com/photo-1528249227670-9ba48616014f?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=66b8e7db17b83084f16fdeadfc93b95b&auto=format&fit=crop&w=357&q=80" class="rounded" style="width: 100%; height: 10 vw; object-fit: cover">
-                <img src="https://images.unsplash.com/photo-1521341057461-6eb5f40b07ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=72da2f550f8cbd0ec252ad6fb89c96b2&auto=format&fit=crop&w=334&q=80" class="rounded" style="width: 100%; height:10 vw; object-fit: cover">
-                <img src="https://images.unsplash.com/photo-1506667527953-22eca67dd919?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6326214b7ce18d74dde5e88db4a12dd5&auto=format&fit=crop&w=750&q=80" class="rounded" style="width: 100%; height:10 vw; object-fit: cover">
-            </div>
-        </div>
-    </div>
+					<div class="col-3 mt-5 text-center">
+					
+					</div>
+					<div class="col-6 mt-5 text-center">
+						<div class="row">
+							<div class="col-12 text-center">
+							<h2>USER RECIPES</h2>
+							</div>
+
+						
+						</div>
+						<div class="row">
+						  <?php
+              //Query to get all the recipes which belongs to the selected user
+							$sql = "SELECT id, recipe_name, creator_name, description, recipe_picture, likes, dislikes, recipe_picture FROM recipes WHERE creator_name='$name_profile'";
+							$resultset = mysqli_query($connString, $sql) or die("database error:". mysqli_error($connString));
+							while($row = mysqli_fetch_assoc($resultset)){
+								$recipes[] = $row;
+              }
+              //If there are recipes found belonging to the selected user, then display it
+							if(isset($recipes)){
+                $_SESSION['recipes'] = $recipes;
+							  foreach($_SESSION['recipes'] as $recipes){
+								$recipe_id = $recipes['id'];
+								$recipe_name = $recipes['recipe_name'];
+								$creator_name = $recipes['creator_name'];
+								$description = $recipes['description'];
+								$likes = $recipes['likes'];
+								$dislikes = $recipes['dislikes'];
+								$picture = $recipes['recipe_picture'];
+								echo  '<div class="col-lg-4 col-md-6 mb-5">
+                    <div class="card h-100">
+                      <!-- Recipe Image -->
+										  <a href="recipe_page.php?id='.$recipe_id.'"><img class="card-img-top" src="'.$picture.'" alt="" width="400"></a>
+										  <div class="card-body">
+                      <h4 class="card-title">
+                        <!-- Recipe name -->
+											  <a href="recipe_page.php?id='.$recipe_id.'">'.$recipe_name.'</a>
+											</h4>
+                      <h6 class="card-text">
+                        <!-- Author name -->
+											  <a href="profile_page.php?profile_name='.$creator_name.'" >'.$creator_name.'</a>
+                      </h6>
+                      <!-- Recipe description -->
+                      <p class="card-text">'.$description.'</p>';
+                      
+                      //Check if user is viewing his/her profile, if so display button to edit and remove recipe
+                      if($name_profile==$username){
+                        //4E
+                        echo '
+                        <!-- Edit recipe button -->
+                        <a href="edit_recipe.php?id='.$recipe_id.'"><button class="btn btn-primary">Edit Recipe</button> </a>
+                        <!-- Remove recipe button -->
+                        <a href="remove_recipe_response.php?id='.$recipe_id.'"><button class="btn btn-primary"><i class="fa fa-times aria-hidden="true" style="color:red"></i></button></a>';
+                      }
+                  
+                      echo '
+										  </div>
+                      <div class="card-footer">
+                      <!-- Number of likes -->
+											<i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgreen"> '.$likes.'</i>
+                      <!-- Number of dislikes -->
+                      <i class="fa fa-thumbs-down ml-2" aria-hidden="true" style="color:red"> '.$dislikes.'</i>
+										  </div>
+										</div>
+									  </div>';
+							  }
+              } 
+              //If no recipes are found that belongs to the user then display "This user has not yet submitted any recipe"
+              else {
+							  echo '<div class="col-lg-12 col-md-6 text-center mb-5>"
+									  <div class="card h-100">
+										<h3>This User Not Yet Submitted Any Recipes</h3>
+									  </div>
+									</div>';
+							}
+
+						  ?>
+
+						</div>
+						
+					</div>
+					<div class="col-3 mt-5 text-center">
+					
+					</div>
+
+				
+				
+				</div>
+		
+		
+		</div>
+	
+	</div>
+  
     
 
   <!-- Footer -->
-  <footer class="footer bg-dark fixed-bottom">
-    <div class="container mt-n5">
+  <footer class="footer bg-dark">
+    <div class="container">
       <div class="row">
         <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
           <ul class="list-inline mb-2">
             <li class="list-inline-item">
-              <a href="#">About</a>
+              <a href="about.php">About</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Contact</a>
+              <a href="contact.php">Contact</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Terms of Use</a>
+              <a href="terms_of_use.php">Terms of Use</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Privacy Policy</a>
+              <a href="privacy_policy.php">Privacy Policy</a>
             </li>
           </ul>
-          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
         </div>
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">
             <li class="list-inline-item mr-3">
-              <a href="#">
+              <a href="http://www.facebook.com">
                 <i class="fab fa-facebook fa-2x fa-fw"></i>
               </a>
             </li>
             <li class="list-inline-item mr-3">
-              <a href="#">
+              <a href="http://www.twitter.com">
                 <i class="fab fa-twitter-square fa-2x fa-fw"></i>
               </a>
             </li>
             <li class="list-inline-item">
-              <a href="#">
+              <a href="http://www.instagram.com">
                 <i class="fab fa-instagram fa-2x fa-fw"></i>
               </a>
             </li>

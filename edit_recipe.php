@@ -1,6 +1,8 @@
 <?php
-  //Start session for this page
-  session_start();
+  //Start session and make database connection
+  include_once("./connect/db_cls_connect.php");
+  $db = new dbObj();
+  $connString =  $db->getConnstring();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +14,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Add Recipe Cloche</title>
+  <title>Edit Recipe Cloche</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -48,27 +50,27 @@
                 <a class="nav-link" href="help.php">Help</a>
             </li>
             <?php
-              //Check if user is logged in, if yes then display user profile button 
-              if(isset($_SESSION['user_session'])){
-              $username = $_SESSION['user_session'];
-              echo "<li class='dropdown'>
-                      <a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#Profile'>$username</a>
-                      <ul class='dropdown-menu'>
-                          <li>
-                          <a class='dropdown-item' href='profile_page.php?profile_name=$username'>Profile</a>
-                          </li>
-                          <li>
-                          <a class='dropdown-item' href='logout_response.php'>Logout</a>
-                          </li>
-                      </ul>
-                      </li>";
-              } 
-              //If not logged in then display button to sign in/register
-              else {
-              echo "<li>
-                      <a class='nav-link' href='login.php'>Sign In/Register</a>
-                      </li>";
-              }
+                //Check if user is logged in, if yes then display user profile button
+                if(isset($_SESSION['user_session'])){
+                $username = $_SESSION['user_session'];
+                echo "<li class='dropdown'>
+                        <a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#'>$username</a>
+                        <ul class='dropdown-menu'>
+                            <li>
+                            <a class='dropdown-item' href='profile_page.php?profile_name=$username'>Profile</a>
+                            </li>
+                            <li>
+                            <a class='dropdown-item' href='logout_response.php'>Logout</a>
+                            </li>
+                        </ul>
+                        </li>";
+                } 
+                //If not logged in then display button to sign in/register
+                else {
+                echo "<li>
+                        <a class='nav-link' href='login.php'>Sign In/Register</a>
+                        </li>";
+                }
             ?>
             </ul>
         </div>
@@ -76,42 +78,57 @@
     </nav>
 
     <!-- Page Content -->
-    <!-- 5B -->
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-12">
                 <br>
                 <br>
-                <!-- card -->
                 <div class="card mt-4">
-                  <!-- Form for adding recipe-->
-                  <form id="add-recipe" name="add_recipe" method="post" action="add_recipe_response.php" enctype="multipart/form-data">
-                  <!-- Recipe image display -->
-                  <img id="image" class="card-img-top img-fluid" src="http://placehold.it/1140x500" alt="" style="max-width:1140px;">
-                  <!-- Recipe image input -->
-                  <input type="file" class="form-control-file btn-primary w-25" id="image_upload" name="image_upload" onchange="readURL(this);" accept="image/*">  
-                  <div class="card-body">
-                    <!-- Recipe name input -->
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="title" name="title" placeholder="Recipe Name...">
-                    </div>
-                    <!-- Recipe description input -->
-                    <div class="form-group">
-                        <textarea type="text" class="form-control" id="description" name="description" placeholder="Description..."></textarea>
-                    </div>
-                    <!-- Recipe ingredients input -->
-                    <div class="form-group">
-                        <textarea type="text" class="form-control" id="ingredients" name="ingredients" placeholder="Ingredients..."></textarea>
-                    </div>
-                    <!-- Recipe steps input -->
-                    <div class="form-group">
-                        <textarea type="text" class="form-control" id="steps" name="steps" placeholder="Steps..."></textarea>
-                    </div>
-                    <!-- Hidden parameter to ensure form is submitted properly -->
-                    <input type="hidden" name="form_submitted" value="1"/>
-                    <!-- Submit button -->
-                    <button type=submit class="btn btn-primary">Submit</button>
-                  </div>
+                  <!-- Form for edit recipe -->
+                  <form id="edit-recipe" name="edit_recipe" method="post" action="edit_recipe_response.php" enctype="multipart/form-data">
+                  <?php
+                    //Get current recipe information
+                    $id = $_GET['id'];
+                    //Query to get current recipe information using recipe id
+                    $query = "SELECT recipe_name, description, ingredients, steps, recipe_picture FROM recipes WHERE id='$id'";
+                    $result = mysqli_query($connString, $query) or die("database error:". mysqli_error($connString));
+                    $row = mysqli_fetch_assoc($result);
+                    //Assign current recipe information
+                    $title = $row['recipe_name'];
+                    $desc = $row['description'];
+                    $ingredients = $row['ingredients'];
+                    $steps = $row['steps'];
+                    $image = $row['recipe_picture'];
+                    //Create html elements containing the current recipe information
+                    echo '<!-- Recipe Image -->
+                          <img id="image" class="card-img-top img-fluid" src='.$image.' alt="" style="max-width:1140px;">
+                          <!-- Input for recipe image -->
+                          <input type="file" class="form-control-file btn-primary w-25" id="image_upload" name="image_upload" onchange="readURL(this);" accept="image/*">  
+                          <div class="card-body">
+                              <div class="form-group">
+                                  <h3>'.$title.'</h3>
+                              </div>
+                              <div class="form-group">
+                                  <!-- Input for recipe description -->
+                                  <textarea type="text" class="form-control" id="description" name="description">'.$desc.'</textarea>
+                              </div>
+                              <div class="form-group">
+                                  <!-- Input for recipe ingredients -->
+                                  <textarea type="text" class="form-control" id="ingredients" name="ingredients">'.$ingredients.'</textarea>
+                              </div>
+                              <div class="form-group">
+                                  <!-- Input for recipe steps -->
+                                  <textarea type="text" class="form-control" id="steps" name="steps">'.$steps.'</textarea>
+                              </div>
+                              <!-- Hidden parameter to ensure form is submitted properly -->
+                              <input type="hidden" name="form_submitted" value="1"/>
+                              <!-- Hidden parameter to pass the recipe id -->
+                              <input type="hidden" name="id" value="'.$id.'">
+                              <!-- Submit button -->
+                              <button type=submit class="btn btn-primary">Submit</button>
+                          </div>';
+                  ?>
+                  
                   </form>
                 </div>
                 <!-- /.card -->

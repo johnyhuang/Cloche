@@ -1,4 +1,5 @@
 <?php
+//Start session
 session_start();
 ?>
 
@@ -12,7 +13,7 @@ session_start();
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Landing Page - Start Bootstrap Theme</title>
+  <title>Login Cloche</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -60,11 +61,14 @@ session_start();
     <div class="row">    
       <div class="col-lg-6 mt-5">
         <h1>Login</h1>
+        <!-- Login form -->
         <form id="login-form" name="login" method="post" action="login_response.php">
           <div class="form-group w-75">
             <label for="email">Email address:</label>
+            <!-- Email input -->
             <input type="email" class="form-control" id="email" name="email" placeholder="Email">
             <?php
+              //Show error text when there is an error with the email
               if(isset($_SESSION['email_error'])){
                 $error = $_SESSION['email_error'];
                 echo "<span style='color:red'>$error<span>";
@@ -73,28 +77,36 @@ session_start();
           </div>
           <div class="form-group w-75">
             <label for="pwd">Password:</label>
+            <!-- Password input -->
             <input type="password" class="form-control" id="pwd" name="password" placeholder="Password">
             <?php
+              //Show error text when there is an error with the password
               if(isset($_SESSION['password_error'])){
                 $error = $_SESSION['password_error'];
                 echo "<span style='color:red'>$error<span>";
               }
             ?>
           </div>
+          <!-- Hidden parameter to ensure form is submitted properly -->
           <input type="hidden" name="form_submitted" value="1" />
+          <!-- Submit button -->
           <button type="submit" class="btn btn-primary">Log In</button>
         </form>
       </div>
 
+      <!-- Dividing line -->
       <div class="col-lg-1 text-secondary" style="border-left:medium solid; margin-top:25px"></div>
 
       <div class="col-lg-5 mt-5">
           <h1>Register</h1>
+          <!-- Registration form -->
           <form id="register-form" name="register" method="post" action="register_response.php">
             <div class="form-group  w-75">
               <label for="email">Username:</label>
+              <!-- Username input -->
               <input type="text" class="form-control" id="username" name="username" placeholder="Username">
               <?php
+              //Show error text when there is an error with the username
               if(isset($_SESSION['username_taken'])){
                 $error = $_SESSION['username_taken'];
                 echo "<span style='color:red'>$error<span>";
@@ -103,8 +115,10 @@ session_start();
             </div>
             <div class="form-group  w-75">
               <label for="email">Email address:</label>
+              <!-- Email input -->
               <input type="email" class="form-control" id="email" name="email" placeholder="Email">
               <?php
+              //Show error text when there is an error with the email
               if(isset($_SESSION['email_taken'])){
                 $error = $_SESSION['email_taken'];
                 echo "<span style='color:red'>$error<span>";
@@ -113,17 +127,22 @@ session_start();
             </div>
             <div class="form-group  w-75">
               <label for="pwd">Password (Password must be at least 8 characters with at least 1 capital letter and 1 number):</label>
+              <!-- Password input -->
               <input type="password" class="form-control" id="pwd" name="password" placeholder="Password">
               <?php
+              //Show error text when there is an error with the password
               if(isset($_SESSION['password_invalid'])){
                 $error = $_SESSION['password_invalid'];
                 echo "<span style='color:red'>$error<span>";
               }
               ?>
             </div>
+            <!-- Hidden parameter to ensure form is submitted properly -->
             <input type="hidden" name="form_submitted" value="1" />
+            <!-- Submit button -->
             <button type="submit" class="btn btn-primary">Register</button>
             <?php
+            //Show success text when registration is sucessful
               if(isset($_SESSION['register_success'])){
                 $success = $_SESSION['register_success'];
                 echo "<span style='color:lightgreen'>$success<span>";
@@ -136,25 +155,25 @@ session_start();
   </div>
   
   <!-- Footer -->
-  <footer class="footer bg-dark fixed-bottom">
-    <div class="container mt-n5">
+  <footer class="footer bg-dark">
+    <div class="container">
       <div class="row">
         <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
           <ul class="list-inline mb-2">
             <li class="list-inline-item">
-              <a href="#">About</a>
+              <a href="about.php">About</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Contact</a>
+              <a href="contact.php">Contact</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Terms of Use</a>
+              <a href="terms_of_use.php">Terms of Use</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Privacy Policy</a>
+              <a href="privacy_policy.php">Privacy Policy</a>
             </li>
           </ul>
           <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
@@ -162,17 +181,17 @@ session_start();
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">
             <li class="list-inline-item mr-3">
-              <a href="#">
+              <a href="http://www.facebook.com">
                 <i class="fab fa-facebook fa-2x fa-fw"></i>
               </a>
             </li>
             <li class="list-inline-item mr-3">
-              <a href="#">
+              <a href="http://www.twitter.com">
                 <i class="fab fa-twitter-square fa-2x fa-fw"></i>
               </a>
             </li>
             <li class="list-inline-item">
-              <a href="#">
+              <a href="http://www.instagram.com">
                 <i class="fab fa-instagram fa-2x fa-fw"></i>
               </a>
             </li>

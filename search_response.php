@@ -1,18 +1,16 @@
 <?php
-//include connection file 
+//Start session and make database connection
 include_once("./connect/db_cls_connect.php");
 $db = new dbObj();
 $connString =  $db->getConnstring();
 
+//Checks if form is submitted through index.php, so user cannot access this page without going through index.php
 if(isset($_POST['form_submitted'])) {
-    $search = mysqli_real_escape_string($connString, trim($_POST['search']));
-    $sql = "SELECT id, recipe_name, creator_name, description, recipe_picture, likes, dislikes, recipe_picture FROM recipes WHERE recipe_name='$search'";
-    $resultset = mysqli_query($connString, $sql) or die("database error:". mysqli_error($connString));
-    while($row = mysqli_fetch_assoc($resultset)){
-        $recipes[] = $row;
-    }
-    $_SESSION['recipes'] = $recipes;
-    header("Location: search_page.php");
+    //Modify the search input
+    $qry = str_replace(" ","+", $_POST["search"]);
+    
+    //Redirect to search page with the modified input
+    header("Location: search_page.php?search=".$qry);
 }
 
 ?>

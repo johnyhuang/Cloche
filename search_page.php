@@ -1,5 +1,8 @@
 <?php
-  session_start();
+  //Start session and make database connection
+  include_once("./connect/db_cls_connect.php");
+  $db = new dbObj();
+  $connString =  $db->getConnstring();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +14,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Landing Page - Start Bootstrap Theme</title>
+  <title>Search Recipe Cloche</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -47,20 +50,23 @@
             <a class="nav-link" href="help.php">Help</a>
           </li>
           <?php
+            //Check if user is logged in, if yes then display user profile button
             if(isset($_SESSION['user_session'])){
               $username = $_SESSION['user_session'];
               echo "<li class='dropdown'>
-                      <a class='nav-link dropdown-toggle' data-toggle='dropdown'>$username</a>
+                      <a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#'>$username</a>
                       <ul class='dropdown-menu'>
                         <li>
-                          <a class='dropdown-item' href='#Profile'>Profile</a>
+                          <a class='dropdown-item' href='profile_page.php?profile_name=$username'>Profile</a>
                         </li>
                         <li>
                           <a class='dropdown-item' href='logout_response.php'>Logout</a>
                         </li>
                       </ul>
                     </li>";
-            } else {
+            } 
+            //If not logged in then display button to sign in/register
+            else {
               echo "<li>
                       <a class='nav-link' href='login.php'>Sign In/Register</a>
                     </li>";
@@ -106,46 +112,103 @@
             <span class="sr-only">Next</span>
           </a>
         </div>
+        
+        <div class="row">
+          <div class="col-lg-12 text-center">
+          <?php
+          //Query to get recipes and count the number of matching recipes
+          $condition = '';  
+          $query = explode(" ", $_GET["search"]);  
+          $search_recipe = $_GET['search'];
+          
+          //Break search into keywords and make them as conditions
+          foreach($query as $text)  
+          {  
+              $condition .= "recipe_name LIKE '%".mysqli_real_escape_string($connString, $text)."%' OR ";  
+          }
+          
+          //Query to get recipes that matches the keywords
+          $condition = substr($condition, 0, -4);  
+          $sql_query = "SELECT * FROM recipes WHERE " . $condition;  
+          $result = mysqli_query($connString, $sql_query);
+          $result_2 = mysqli_query($connString, $sql_query);
+          $counter = 0;
+          
+          //Count how many recipes are found
+          if(mysqli_num_rows($result) > 0)  
+          {  
+            while($row = mysqli_fetch_array($result)){
+              $counter++;
+            }    
+            //Print how many recipes are found
+            echo "<h1>There are $counter recipes containing '$search_recipe'</h1>";
+            
+          }
+          
+
+          ?>
+          </div>
+          
+        </div>
+          
+        <br>
 
         <div class="row">
-          <?php
-            if(isset($_SESSION['recipes'])){
-              foreach($_SESSION['recipes'] as $recipes){
-                $recipe_id = $recipes['id'];
-                $recipe_name = $recipes['recipe_name'];
-                $creator_name = $recipes['creator_name'];
-                $description = $recipes['description'];
-                $likes = $recipes['likes'];
-                $dislikes = $recipes['dislikes'];
-                $picture = $recipes['recipe_picture'];
-                echo  '<div class="col-lg-4 col-md-6 mb-5">
-                        <div class="card h-100">
-                          <a href="#"><img class="card-img-top" src="'.$picture.'" alt=""></a>
-                          <div class="card-body">
-                            <h4 class="card-title">
-                              <a href="recipe_page.php?id='.$recipe_id.'">'.$recipe_name.'</a>
-                            </h4>
-                            <h6 class="card-text">
-                              <a href="profile_page.php?name='.$creator_name.'" >'.$creator_name.'</a>
-                            </h6>
-                            <p class="card-text">'.$description.'</p>
-                          </div>
-                          <div class="card-footer">
-                            <i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgreen"> '.$likes.'</i>
-                            <i class="fa fa-thumbs-down ml-2" aria-hidden="true" style="color:red"> '.$dislikes.'</i>
-                          </div>
-                        </div>
-                      </div>';
-              }
-            } else {
-              echo '<div class="col-lg-12 col-md-6 text-center mb-5>"
-                      <div class="card h-100">
-                        <h3>No entry found</h3>
+        
+        <?php
+         //2B
+         //Check if results are found, if so then create bootstrap cards containing the recipe information
+         if(mysqli_num_rows($result) > 0)  
+         {  
+          //Repeat for every recipe
+          while($row = mysqli_fetch_array($result_2))  
+              {  
+                //Assign recipe information such as recipe image, id, recipe name, recipe creator, recipe description, recipe likes and dislikes
+                $recipe_picture = $row['recipe_picture'];
+                $recipe_id = $row['id'];
+                $recipe_name = $row['recipe_name'];
+                $recipe_creator_name = $row['creator_name'];
+                $recipe_description = $row['description'];
+                $recipe_likes = $row['likes'];
+                $recipe_dislikes = $row['dislikes'];
+                 echo  '<div class="col-lg-4 col-md-6 mb-5">
+                    <div class="card h-100">
+                      <!-- 2D -->
+                      <!-- Recipe image -->
+                      <a href="recipe_page.php?id='.$recipe_id.'"><img class="card-img-top" src="'.$recipe_picture.'" alt=""></a>
+                      <div class="card-body">
+                        <h4 class="card-title">
+                          <!-- Recipe name -->
+                          <a href="recipe_page.php?id='.$recipe_id.'">'.$recipe_name.'</a>
+                        </h4>
+                        <h6 class="card-text">
+                          <!-- Author name -->
+                          <a href="profile_page.php?profile_name='.$recipe_creator_name.'" >'.$recipe_creator_name.'</a>
+                        </h6>
+                        <!-- Recipe description -->
+                        <p class="card-text">'.$recipe_description.'</p>
                       </div>
-                    </div>';
-            }
-            
-          ?>
+                      <div class="card-footer">
+                        <!-- Number of likes -->
+                        <i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgreen"> '.$recipe_likes.'</i>
+                        <!-- Number of dislikes -->
+                        <i class="fa fa-thumbs-down ml-2" aria-hidden="true" style="color:red"> '.$recipe_dislikes.'</i>
+                      </div>
+                    </div>
+                  </div>';     
+              }  
+              
+         }  
+         //2C
+         //If there are no recipes found then display "There are no recipes containing 'recipe name'"
+         else  
+         {  
+          echo "<h1>There are no recipes containing '$search_recipe'</h1>"; 
+         }  
+         
+
+        ?>
+          
 
         </div>
         <!-- /.row -->
@@ -166,19 +229,19 @@
         <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
           <ul class="list-inline mb-2">
             <li class="list-inline-item">
-              <a href="#">About</a>
+              <a href="about.php">About</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Contact</a>
+              <a href="contact.php">Contact</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Terms of Use</a>
+              <a href="terms_of_use.php">Terms of Use</a>
             </li>
             <li class="list-inline-item">&sdot;</li>
             <li class="list-inline-item">
-              <a href="#">Privacy Policy</a>
+              <a href="privacy_policy.php">Privacy Policy</a>
             </li>
           </ul>
           <p class="text-muted small mb-4 mb-lg-0">&copy; Cloche 2019. All Rights Reserved.</p>
@@ -186,17 +249,17 @@
         <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
           <ul class="list-inline mb-0">
             <li class="list-inline-item mr-3">
-              <a href="#">
+              <a href="http://www.facebook.com">
                 <i class="fab fa-facebook fa-2x fa-fw"></i>
               </a>
             </li>
             <li class="list-inline-item mr-3">
-              <a href="#">
+              <a href="http://www.twitter.com">
                 <i class="fab fa-twitter-square fa-2x fa-fw"></i>
               </a>
             </li>
             <li class="list-inline-item">
-              <a href="#">
+              <a href="http://www.instagram.com">
                 <i class="fab fa-instagram fa-2x fa-fw"></i>
               </a>
             </li>

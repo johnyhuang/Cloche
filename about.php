@@ -1,6 +1,6 @@
 <?php
-  //Start session
-  session_start();
+//Start session for this page
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +12,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Cloche</title>
+  <title>About Cloche</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -44,7 +44,6 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <!-- 3A -->
           <li class="nav-item">
             <a class="nav-link" href="help.php">Help</a>
           </li>
@@ -55,7 +54,6 @@
               echo "<li class='dropdown'>
                       <a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#'>$username</a>
                       <ul class='dropdown-menu'>
-                        <!-- 4A -->
                         <li>
                           <a class='dropdown-item' href='profile_page.php?profile_name=$username'>Profile</a>
                         </li>
@@ -67,7 +65,6 @@
             } 
             //If not logged in then display button to sign in/register
             else {
-              //1A
               echo "<li>
                       <a class='nav-link' href='login.php'>Sign In/Register</a>
                     </li>";
@@ -78,56 +75,30 @@
     </div>
   </nav>
 
-  <!-- Page Content -->
-  <!-- Masthead -->
-  <header class="masthead text-white text-center">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <!-- Cloche text with icon -->
-        <div class="col-xl-9 mx-auto">
-          <i class="icon-fire m-auto text-primary" style="font-size: 50px;">
-            <h1 class="mb-5 text-primary">Cloché</h1>
-          </i>    
-        </div>
-        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-          <!-- 2A -->
-          <!-- Form for searching recipe -->
-          <form id="search-form" name="search_form" method="post" action="search_response.php">
-            <div class="form-row">
-              <div class="col-12 col-md-9 mb-2 mb-md-0">
-                <!-- Input for recipe recipe -->
-                <input type="text" class="form-control form-control-lg" id="search" name="search" placeholder="Search Recipes...">
-              </div>
-              <div class="col-12 col-md-3">
-                <!-- Hidden parameter to ensure form is submitted properly -->
-                <input type="hidden" name="form_submitted" value="1" />
-                <!-- Submit button -->
-                <button type="submit" class="btn btn-block btn-lg btn-primary">Search</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-xl-9 mx-auto mt-4">
-          <?php
-            //5A
-            //Show Add Recipe Button if user is logged in
-            if(isset($_SESSION['user_session'])){
-              echo "<form action='add_recipe.php'>
-                      <button type='submit' class='btn btn-lg btn-primary'>
-                        <i class='icon-plus m-auto text-tertiary'> 
-                        </i>
-                        Add Recipe
-                      </button>
-                    </form>";
-            }
-          ?>
-        </div>
-      </div>
-    </div>
-  </header>
 
-  
+  <!-- Page Content -->
+  <div class="container mt-5">
+    <div class="col-lg-12">
+      <br>
+      <br>
+      <br>
+      <h1>About Cloche</h1>
+      <h5>Cloche is a website to share food recipes online</h5>
+      <br>
+      <h1>Cloche Teams</h1>
+        <h5>- Dave Joshua Marcellino Rumengan</h5>
+        <h5>- David Koswari</h5>
+        <h5>- Johny Huang</h5>
+        <h5>- Leon Chrisdion</h5>
+        <h5>- Louis Alvaro</h5>
+        <h5>- Nicholas</h5>
+        <h5>- Nicholas Prawiro Chen Wei Hung</h5>
+        <h5>- Sutedja The Ho Ping</h5>
+
+      <br>
+      <br>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer bg-dark">
