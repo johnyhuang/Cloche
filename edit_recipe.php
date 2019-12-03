@@ -110,15 +110,18 @@
                               </div>
                               <div class="form-group">
                                   <!-- Input for recipe description -->
-                                  <textarea type="text" class="form-control" id="description" name="description">'.$desc.'</textarea>
+                                  <h3>Description</h3>
+                                  <textarea type="text" class="form-control" id="description" name="description" rows="5">'.$desc.'</textarea>
                               </div>
                               <div class="form-group">
                                   <!-- Input for recipe ingredients -->
-                                  <textarea type="text" class="form-control" id="ingredients" name="ingredients">'.$ingredients.'</textarea>
+                                  <h3>Ingredients</h3>
+                                  <textarea type="text" class="form-control" id="ingredients" name="ingredients" rows="10">'.$ingredients.'</textarea>
                               </div>
                               <div class="form-group">
                                   <!-- Input for recipe steps -->
-                                  <textarea type="text" class="form-control" id="steps" name="steps">'.$steps.'</textarea>
+                                  <h3>Steps</h3>
+                                  <textarea type="text" class="form-control" id="steps" name="steps" rows="10">'.$steps.'</textarea>
                               </div>
                               <!-- Hidden parameter to ensure form is submitted properly -->
                               <input type="hidden" name="form_submitted" value="1"/>

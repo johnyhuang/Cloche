@@ -114,7 +114,7 @@ $desc = $_SESSION['desc'];
                 <div class="col-2">
                     <h3>Description</h3>
                     <!-- Input for description -->
-                    <?php echo "<textarea type='text' class='form-control' id='desc_update' name='desc_update'>$desc</textarea>"; //Display current recipe data which user can alter?>
+                    <?php echo "<textarea type='text' class='form-control' id='desc_update' name='desc_update' rows='5'>$desc</textarea>"; //Display current recipe data which user can alter?>
                 </div>
                 <div class="col-5">
                 </div>

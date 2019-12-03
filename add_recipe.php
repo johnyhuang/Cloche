@@ -93,18 +93,22 @@
                   <div class="card-body">
                     <!-- Recipe name input -->
                     <div class="form-group">
+                        <h3>Title</h3>
                         <input type="text" class="form-control" id="title" name="title" placeholder="Recipe Name...">
                     </div>
                     <!-- Recipe description input -->
                     <div class="form-group">
+                        <h3>Description</h3>
                         <textarea type="text" class="form-control" id="description" name="description" placeholder="Description..."></textarea>
                     </div>
                     <!-- Recipe ingredients input -->
                     <div class="form-group">
+                        <h3>Ingredients</h3>
                         <textarea type="text" class="form-control" id="ingredients" name="ingredients" placeholder="Ingredients..."></textarea>
                     </div>
                     <!-- Recipe steps input -->
                     <div class="form-group">
+                        <h3>Steps</h3>
                         <textarea type="text" class="form-control" id="steps" name="steps" placeholder="Steps..."></textarea>
                     </div>
                     <!-- Hidden parameter to ensure form is submitted properly -->
